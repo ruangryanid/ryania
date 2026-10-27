@@ -1,26 +1,154 @@
 @import "tailwindcss";
 
+/* ---------- Design tokens (iOS-like system palette) ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  color-scheme: light dark;
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface-2: #f2f2f7;
+  --label: #000000;
+  --label-2: rgba(60, 60, 67, 0.62);
+  --label-3: rgba(60, 60, 67, 0.3);
+  --sep: rgba(60, 60, 67, 0.14);
+  --accent: #007aff;
+  --accent-soft: rgba(0, 122, 255, 0.12);
+  --income: #1f9d4a;
+  --expense: #e5352b;
+  --ok: #34c759;
+  --warn: #ffb300;
+  --danger: #ff3b30;
+  --material: rgba(249, 249, 249, 0.72);
+  --material-edge: rgba(255, 255, 255, 0.6);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --sheet-shadow: 0 -8px 40px rgba(0, 0, 0, 0.18);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --surface-2: #2c2c2e;
+    --label: #ffffff;
+    --label-2: rgba(235, 235, 245, 0.62);
+    --label-3: rgba(235, 235, 245, 0.3);
+    --sep: rgba(84, 84, 88, 0.5);
+    --accent: #0a84ff;
+    --accent-soft: rgba(10, 132, 255, 0.2);
+    --income: #32d74b;
+    --expense: #ff6961;
+    --material: rgba(28, 28, 30, 0.72);
+    --material-edge: rgba(255, 255, 255, 0.08);
+    --shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.04);
+    --sheet-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
   }
 }
 
+@theme inline {
+  --color-app: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-label: var(--label);
+  --color-label-2: var(--label-2);
+  --color-label-3: var(--label-3);
+  --color-sep: var(--sep);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-income: var(--income);
+  --color-expense: var(--expense);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+
+/* ---------- Mobile-native baseline ---------- */
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+  background: var(--bg);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--label);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+input, textarea, select {
+  font-size: 16px;
+  font-family: inherit;
+  color: inherit;
+}
+
+button, a, [role="button"], summary {
+  touch-action: manipulation;
+}
+
+button, [role="button"], .ctl {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  font-family: inherit;
+}
+
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+
+/* Press feedback: responds on touch-down, on every input type */
+.press {
+  transition: transform 120ms var(--ease-out), opacity 120ms var(--ease-out), background-color 120ms;
+}
+.press:active { transform: scale(0.97); opacity: 0.85; }
+.press-row { transition: background-color 120ms; }
+.press-row:active { background-color: var(--sep); }
+
+@media (hover: hover) and (pointer: fine) {
+  .press:hover { opacity: 0.88; }
+  .press-row:hover { background-color: color-mix(in srgb, var(--sep) 50%, transparent); }
+}
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Typography (size-specific tracking & leading) ---------- */
+.t-large { font-size: 2.125rem; line-height: 1.1; letter-spacing: -0.022em; font-weight: 700; }
+.t-title { font-size: 1.375rem; line-height: 1.2; letter-spacing: -0.018em; font-weight: 700; }
+.t-headline { font-size: 1.0625rem; line-height: 1.3; letter-spacing: -0.01em; font-weight: 600; }
+.t-body { font-size: 1rem; line-height: 1.4; letter-spacing: -0.005em; }
+.t-sub { font-size: 0.8125rem; line-height: 1.35; color: var(--label-2); }
+.t-cap { font-size: 0.75rem; line-height: 1.3; letter-spacing: 0.01em; color: var(--label-2); }
+.t-section {
+  font-size: 0.8125rem; letter-spacing: 0.02em; text-transform: uppercase;
+  color: var(--label-2); font-weight: 500;
+}
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- Materials ---------- */
+.material {
+  background: var(--material);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes pulse-soft { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+.skeleton { background: var(--sep); border-radius: 10px; animation: pulse-soft 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .material { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  :root { --sep: rgba(60, 60, 67, 0.4); --label-2: rgba(60, 60, 67, 0.85); }
+  .material { background: var(--surface); border: 1px solid var(--sep); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .press, .press-row { transition: opacity 120ms; }
+  .press:active { transform: none; }
+  .skeleton { animation: none; }
 }
